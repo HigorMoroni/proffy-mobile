@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, ScrollView, Text, TextInput } from 'react-native';
 import { BorderlessButton, RectButton } from 'react-native-gesture-handler';
 import { Feather } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import api from '../../services/api';
 import PageHeader from '../../components/PageHeader';
@@ -13,6 +14,17 @@ function TeacherList() {
   const [isFiltersVisible, setIsFiltersVisible] = useState(true);
 
   const [teachers, setTeachers] = useState([]);
+  const [favorites, setFavorites] = useState<number[]>([]);
+
+  function loadFavorites() {
+    AsyncStorage.getItem('favorites').then(response => {
+      if (response) {
+        const favoritedTeachers = JSON.parse(response);
+        const favoritedTeachersIds = favoritedTeachers.map((teacher: Teacher )=> teacher.id)
+        setFavorites(favoritedTeachersIds);
+      }
+    });
+  }
 
   const [subject, setSubject] = useState('');
   const [week_day, setWeekDay] = useState('');
@@ -30,8 +42,8 @@ function TeacherList() {
         time,
       }
     });
-
     setTeachers(response.data);
+    loadFavorites();
     setIsFiltersVisible(false);
   }
 
@@ -101,6 +113,7 @@ function TeacherList() {
             <TeacherItem
               key={teacher.id}
               teacher={teacher}
+              favorited={favorites.includes(teacher.id)}
             />
           )
         })}
