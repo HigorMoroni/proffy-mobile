@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#8257E5'
   },
 
-  topBar: {
+  sizeMode: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
