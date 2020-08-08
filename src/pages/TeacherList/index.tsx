@@ -3,12 +3,14 @@ import { View, ScrollView, Text, TextInput } from 'react-native';
 import { BorderlessButton, RectButton } from 'react-native-gesture-handler';
 import { Feather } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-community/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
 
 import api from '../../services/api';
 import PageHeader from '../../components/PageHeader';
 import TeacherItem, { Teacher } from '../../components/TeacherItem';
 
 import styles from './styles';
+
 
 function TeacherList() {
   const [isFiltersVisible, setIsFiltersVisible] = useState(true);
@@ -25,6 +27,12 @@ function TeacherList() {
       }
     });
   }
+
+  useFocusEffect(
+    React.useCallback(() => {
+      loadFavorites();
+    }, [])
+  );
 
   const [subject, setSubject] = useState('');
   const [week_day, setWeekDay] = useState('');
